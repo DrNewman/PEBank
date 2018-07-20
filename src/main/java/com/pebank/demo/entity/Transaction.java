@@ -34,6 +34,10 @@ public class Transaction implements Serializable {
         this.dateAndTime = dateAndTime;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Account getFromCustomer() {
         return from;
     }

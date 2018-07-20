@@ -26,6 +26,10 @@ public class Account implements Serializable {
         this.balance = balance;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Customer getCustomer() {
         return customer;
     }

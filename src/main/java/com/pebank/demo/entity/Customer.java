@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -13,38 +14,31 @@ public class Customer implements Serializable{
     @GeneratedValue
     private long id;
 
-    private String firstName;
-
-    private String lastName;
+    private String name;
 
     private String address;
 
-    private Date birthday;
+    private LocalDate birthday;
 
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String address, Date birthday) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Customer(String name, String address, LocalDate birthday) {
+        this.name = name;
         this.address = address;
         this.birthday = birthday;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public long getId() {
+        return id;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getName() {
+        return name;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddress() {
@@ -55,11 +49,11 @@ public class Customer implements Serializable{
         this.address = address;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1>Customer [[${customer.name}]]</h1>
+
+    <br> Customer name: [[${customer.name}]]
+    <br> Address: [[${customer.address}]]
+    <br> Birthday: [[${customer.birthday}]]
+
+    <h2>Customer accounts</h2>
+    <ul>
+        <tr data-th-each="account : ${accounts}">
+            <li><a data-th-href="@{'transactions/' + ${account.id}}">[[${account.id}]]</a>
+                [[${account.balance}]]
+        </tr>
+    </ul>
+
+    <form name="NewAccountForm" data-th-action="${customer.id}">
+        <input type="submit" name="action" value="Add new account" />
+    </form>
+</body>
+</html>
