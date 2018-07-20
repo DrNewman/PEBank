@@ -9,18 +9,18 @@
 Для создания базы данных для приложения есть 2 способа:
 
 1. Быстрый и сугубо временный.
--создать базу командами в консоле MySQL
-mysql> create database bank_db;
-mysql> create user 'springuser'@'localhost' identified by 'user';
-mysql> grant all on bank_db.* to 'springuser'@'localhost';
--запустить проект один раз (в базе автоматически создасться необходимая структура)
--изменить значение параметра spring.jpa.hibernate.ddl-auto в конфигурационном файле приложения application.properties на none (иначе при каждом новом запуске структура будет создаваться заново) 
+1.1 создать базу командами в консоле MySQL
+  mysql> create database bank_db;
+  mysql> create user 'springuser'@'localhost' identified by 'user';
+  mysql> grant all on bank_db.* to 'springuser'@'localhost';
+1.2 запустить проект один раз (в базе автоматически создасться необходимая структура)
+1.3 изменить значение параметра spring.jpa.hibernate.ddl-auto в конфигурационном файле приложения application.properties на none (иначе при каждом новом запуске структура будет создаваться заново) 
 
 2. Нормальный
--создать базу командами в консоле MySQL
-mysql> create database bank_db;
-mysql> create user 'springuser'@'localhost' identified by 'user';
-mysql> grant all on bank_db.* to 'springuser'@'localhost';
--создать структуру скриптами (скоро будут добавлены отдельным файлом)
--изменить значение параметра spring.jpa.hibernate.ddl-auto в конфигурационном файле приложения application.properties на none
--запустить приложение
+2.1 создать базу командами в консоле MySQL
+  mysql> create database bank_db;
+  mysql> create user 'springuser'@'localhost' identified by 'user';
+  mysql> grant all on bank_db.* to 'springuser'@'localhost';
+2.2 создать структуру скриптами (Dump20180721.sql)
+2.3 изменить значение параметра spring.jpa.hibernate.ddl-auto в конфигурационном файле приложения application.properties на none
+2.4 запустить приложение
