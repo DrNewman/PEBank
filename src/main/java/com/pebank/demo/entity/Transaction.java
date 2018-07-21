@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Transaction implements Serializable {
@@ -15,43 +15,43 @@ public class Transaction implements Serializable {
     private long id;
 
     @ManyToOne
-    private Account from;
+    private Account sender;
 
     @ManyToOne
-    private Account to;
+    private Account receiver;
 
     private long amount;
 
-    private Date dateAndTime;
+    private LocalDateTime date;
 
     public Transaction() {
     }
 
-    public Transaction(Account from, Account to, long amount, Date dateAndTime) {
-        this.from = from;
-        this.to = to;
+    public Transaction(Account sender, Account receiver, long amount, LocalDateTime date) {
+        this.sender = sender;
+        this.receiver = receiver;
         this.amount = amount;
-        this.dateAndTime = dateAndTime;
+        this.date = date;
     }
 
     public long getId() {
         return id;
     }
 
-    public Account getFromCustomer() {
-        return from;
+    public Account getSender() {
+        return sender;
     }
 
-    public void setFromCustomer(Account from) {
-        this.from = from;
+    public void setSender(Account sender) {
+        this.sender = sender;
     }
 
-    public Account getToCustomer() {
-        return to;
+    public Account getReceiver() {
+        return receiver;
     }
 
-    public void setToCustomer(Account to) {
-        this.to = to;
+    public void setReceiver(Account receiver) {
+        this.receiver = receiver;
     }
 
     public long getAmount() {
@@ -62,11 +62,11 @@ public class Transaction implements Serializable {
         this.amount = amount;
     }
 
-    public Date getDateAndTime() {
-        return dateAndTime;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setDateAndTime(Date dateAndTime) {
-        this.dateAndTime = dateAndTime;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }

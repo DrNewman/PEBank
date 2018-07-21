@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+    <a href="/">Return to main page</a>
     <h1>Customer [[${customer.name}]]</h1>
 
     <br> Customer name: [[${customer.name}]]
@@ -15,8 +16,8 @@
     <h2>Customer accounts</h2>
     <ul>
         <tr data-th-each="account : ${accounts}">
-            <li><a data-th-href="@{'transactions/' + ${account.id}}">[[${account.id}]]</a>
-                [[${account.balance}]]
+            <li><a data-th-href="@{'/transactions?role=sender&customerId=' + ${customer.id} + '&accountId=' + ${account.id}}">№[[${account.id}]]</a>
+                [[${account.balance}]]  [[${currency}]]
         </tr>
     </ul>
 

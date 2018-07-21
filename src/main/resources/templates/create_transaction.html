@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create transaction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <a href="/">Return to main page</a>
+    <h1>Create new transaction</h1>
+    <h2>Sender</h2>
+    <form name="Select sender" action="/create_transaction">
+        Customer: <select name="senderCustomerId">
+            <option value="cashbox">CASHBOX</option>
+            <tr data-th-each="customer : ${customers}">
+                <option data-th-value="${customer.id}" data-th-selected="(${senderCustomerId} == ${customer.id})">[[${customer.name}]]</option>
+            </tr>
+        </select>
+        <input type="submit" name="action" value="Update Accounts" />
+        <br>
+        Account: <select name="senderAccountId">
+            <tr data-th-each="account : ${senderAccounts}">
+                <option data-th-value="${account.id}" data-th-selected="(${senderAccountId} == ${account.id})">№[[${account.id}]] [[${account.balance}]] [[${currency}]]</option>
+            </tr>
+        </select>
+        <br>
+
+    <h2>Receiver</h2>
+        Customer: <select name="receiverCustomerId">
+        <option value="cashbox">CASHBOX</option>
+            <tr data-th-each="customer : ${customers}">
+                <option data-th-value="${customer.id}" data-th-selected="(${receiverCustomerId} == ${customer.id})">[[${customer.name}]]</option>
+            </tr>
+        </select>
+        <input type="submit" name="action" value="Update Accounts" />
+        <br>
+        Account: <select name="receiverAccountId">
+            <tr data-th-each="account : ${receiverAccounts}">
+                <option data-th-value="${account.id}" data-th-selected="(${receiverAccountId} == ${account.id})">№[[${account.id}]] [[${account.balance}]] [[${currency}]]</option>
+            </tr>
+        </select>
+        <br>
+
+        Amount: <input type="text" name="amount" data-th-value="${amount}" size="30" /> [[${currency}]]
+        <br>
+        <input type="submit" name="action" value="Create transaction" />
+        [[${response}]]
+    </form>
+
+</body>
+</html>

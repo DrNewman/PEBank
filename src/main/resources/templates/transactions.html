@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transactions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <a href="/">Return to main page</a>
+    <h2>Filtrate by:</h2>
+    <form name="FiltrateTransactions" action="/transactions">
+        From: <input type="date" name="fromDate" data-th-value="${fromDate}"/>
+        To: <input type="date" name="toDate"  data-th-value="${fromDate}"/>
+        <br>
+        Customer: <select name="customerId">
+            <option value=""></option>
+            <tr data-th-each="customer : ${customers}">
+                <option data-th-value="${customer.id}" data-th-selected="(${customerId} == ${customer.id})">[[${customer.name}]]</option>
+            </tr>
+        </select>
+        <input type="submit" name="action" value="Update Accounts" />
+        <br>
+        Account: <select name="accountId">
+            <option value=""></option>
+            <tr data-th-each="account : ${accounts}">
+                <option data-th-value="${account.id}" data-th-selected="(${accountId} == ${account.id})">№[[${account.id}]] [[${account.balance}]] [[${currency}]]</option>
+            </tr>
+        </select>
+        <br>
+        <input type="submit" name="action" value="Filtrate" />
+    </form>
+    <h2>Transactions</h2>
+    <ul>
+        <tr data-th-each="transaction : ${transactions}">
+            <li><b>Date and time:</b> [[${transaction.date}]]
+                <br><b>Sender:</b> [[@{${transaction.sender == null ? "CASHBOX" : '№' + transaction.sender.id}}]]
+                <br><b>Receiver:</b> [[@{${transaction.receiver == null ? "CASHBOX" : '№' + transaction.receiver.id}}]]
+                <br><b>Amount:</b> [[${transaction.amount}]] [[${currency}]]
+                <br>
+                <!--<form name="NewAccountForm" action="/customers">-->
+                    <!--<input type="hidden" name="customerId" data-th-value="${customer.id}">-->
+                    <!--<input type="submit" name="action" value="Remove customer" />-->
+                <!--</form>-->
+        </tr>
+    </ul>
+</body>
+</html>
