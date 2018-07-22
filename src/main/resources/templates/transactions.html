@@ -8,9 +8,9 @@
 <body>
     <a href="/">Return to main page</a>
     <h2>Filtrate by:</h2>
-    <form name="FiltrateTransactions" action="/transactions">
+    <form name="FiltrateTransactions" action="/transactions" method="POST">
         From: <input type="date" name="fromDate" data-th-value="${fromDate}"/>
-        To: <input type="date" name="toDate"  data-th-value="${fromDate}"/>
+        To: <input type="date" name="toDate"  data-th-value="${toDate}"/>
         <br>
         Customer: <select name="customerId">
             <option value=""></option>
@@ -18,7 +18,7 @@
                 <option data-th-value="${customer.id}" data-th-selected="(${customerId} == ${customer.id})">[[${customer.name}]]</option>
             </tr>
         </select>
-        <input type="submit" name="action" value="Update Accounts" />
+        <input type="submit" name="action" value="Update Accounts" /><- after selecting customer press this button for accounts refresh
         <br>
         Account: <select name="accountId">
             <option value=""></option>

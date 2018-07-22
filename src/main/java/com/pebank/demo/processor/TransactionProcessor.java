@@ -12,6 +12,9 @@ import java.util.Optional;
 @Component
 public class TransactionProcessor{
 
+    public static final String SUCCESS_RESPONSE = "Success!";
+    public static final String FAIL_RESPONSE = "Fail: ";
+
     @Autowired
     private TransactionRepository transactionRepository;
 
@@ -19,14 +22,14 @@ public class TransactionProcessor{
     private AccountRepository accountRepository;
 
     public String provideTransaction(Transaction transaction) {
-        String response = "Success!";
+        String response = SUCCESS_RESPONSE;
         try {
             if (transaction.getAmount() <= 0) {
                 throw new RuntimeException("Wrong transaction amount: " + transaction.getAmount());
             }
             this.makeTransaction(transaction);
         } catch (RuntimeException e) {
-            response = "Fail: \"" + e.getMessage() + "\"";
+            response = FAIL_RESPONSE + "\"" + e.getMessage() + "\"";
         }
 
         return response;
@@ -42,6 +45,7 @@ public class TransactionProcessor{
             }
             sender.get().setBalance(sender.get().getBalance() - transaction.getAmount());
             if (sender.get().getBalance() <= 0) {
+                sender.get().setBalance(sender.get().getBalance() + transaction.getAmount());
                 throw new RuntimeException("Not enough money on account №" + sender.get().getId());
             }
         }

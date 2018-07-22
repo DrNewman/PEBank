@@ -1,5 +1,6 @@
 package com.pebank.demo.validator;
 
+import com.pebank.demo.Constants;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDate;
@@ -11,12 +12,15 @@ public class CustomerInputDataValidator {
         if (StringUtils.isEmptyOrWhitespace(name)) {
             throw new IllegalArgumentException("Parameter \"name\" have not correct value \"" + name + "\"");
         }
-        if ("cashbox".equals(name)) {
+        if (Constants.CASHBOX_VALUE.equals(name)) {
             throw new IllegalArgumentException("Illegal name of customer \"" + name + "\"");
         }
         if (!StringUtils.isEmpty(birthday)) {
             try {
-                LocalDate.parse(birthday);
+                LocalDate localDate = LocalDate.parse(birthday);
+                if (localDate.isAfter(LocalDate.now())) {
+                    throw new IllegalArgumentException("Birthday can't be in the future. birthday: \"" + birthday + "\"");
+                }
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Parameter \"birthday\" have not correct value \"" + birthday + "\"");
             }

@@ -1,5 +1,6 @@
 package com.pebank.demo.controller;
 
+import com.pebank.demo.Constants;
 import com.pebank.demo.entity.Account;
 import com.pebank.demo.entity.Customer;
 import com.pebank.demo.entity.Transaction;
@@ -12,14 +13,14 @@ import com.pebank.demo.validator.TransactionInputDataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.util.DateUtils;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -29,7 +30,6 @@ import java.util.stream.StreamSupport;
 @Controller
 public class AccountingController {
 
-    public static final String CURRENCY = "UAH";
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -43,12 +43,12 @@ public class AccountingController {
     @Autowired
     private TransactionProcessor transactionProcessor;
 
-    @GetMapping("/")
+    @RequestMapping("/")
     public String getWelcomePage() {
         return "welcome";
     }
 
-    @GetMapping("/customers")
+    @RequestMapping("/customers")
     public String addAndGetAllCustomers(@RequestParam(required=false) String action,
                                         @RequestParam(required=false) String name,
                                         @RequestParam(required=false) String address,
@@ -56,19 +56,10 @@ public class AccountingController {
                                         @RequestParam(required=false) String customerId,
                                         Model model) {
         if (!StringUtils.isEmpty(action)) {
-            if ("Add new customer".equals(action)) {
+            if (Constants.NEW_CUSTOMER_ACTION.equals(action)) {
                 CustomerInputDataValidator.validateNewCustomerParams(name, address, birthday);
                 Customer newCustomer = new Customer(name, address, !StringUtils.isEmpty(birthday) ? LocalDate.parse(birthday) : null);
                 customerRepository.save(newCustomer);
-            } else {
-                if ("Remove customer".equals(action)) {
-                    Optional<Customer> customerOptional = this.customerRepository.findById(Long.parseLong(customerId));
-                    if (customerOptional.isPresent()) {
-                        customerRepository.delete(customerOptional.get());
-                    } else {
-                        throw new IllegalArgumentException("Customer with id = " + customerId + " is not exist");
-                    }
-                }
             }
         }
 
@@ -80,14 +71,14 @@ public class AccountingController {
     }
 
 
-    @GetMapping("/customer/{customerId}")
+    @RequestMapping("/customer/{customerId}")
     public String getCustomerInfo(@PathVariable String customerId,
                                   @RequestParam(required=false) String action,
                                   Model model) {
         Optional<Customer> customerOptional = this.customerRepository.findById(Long.parseLong(customerId));
         if (customerOptional.isPresent()) {
             Customer customer = customerOptional.get();
-            if (!StringUtils.isEmpty(action) && "Add new account".equals(action)) {
+            if (!StringUtils.isEmpty(action) && Constants.NEW_ACCOUNT_ACTION.equals(action)) {
                 Account newAccount = new Account(customer, 0);
                 accountRepository.save(newAccount);
             }
@@ -99,12 +90,12 @@ public class AccountingController {
         } else {
             throw new IllegalArgumentException("Customer with id = " + customerId + " is not exist");
         }
-        model.addAttribute("currency", CURRENCY);
+        model.addAttribute("currency", Constants.CURRENCY);
 
         return "customer";
     }
 
-    @GetMapping("/transactions")
+    @RequestMapping("/transactions")
     public String getTransactions(@RequestParam(required=false) String fromDate,
                                   @RequestParam(required=false) String toDate,
                                   @RequestParam(required=false) String customerId,
@@ -151,7 +142,7 @@ public class AccountingController {
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Parameter \"fromDate\" have not correct value \"" + fromDate + "\"");
             }
-            fromDateTime = LocalDate.parse(fromDate, DateTimeFormatter.ISO_LOCAL_DATE).atTime(0, 0);
+            fromDateTime = LocalDate.parse(fromDate, DateTimeFormatter.ISO_LOCAL_DATE).atTime(LocalTime.MIN);
             model.addAttribute("fromDate", fromDate);
         }
         LocalDateTime toDateTime = LocalDateTime.MAX;
@@ -161,7 +152,7 @@ public class AccountingController {
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Parameter \"toDate\" have not correct value \"" + toDate + "\"");
             }
-            toDateTime = LocalDate.parse(toDate, DateTimeFormatter.ISO_LOCAL_DATE).atTime(23, 59, 59);
+            toDateTime = LocalDate.parse(toDate, DateTimeFormatter.ISO_LOCAL_DATE).atTime(LocalTime.MAX);
             model.addAttribute("toDate", toDate);
         }
 
@@ -204,13 +195,13 @@ public class AccountingController {
                 .collect(Collectors.toList());
         model.addAttribute("customers", customers);
 
-        model.addAttribute("currency", CURRENCY);
+        model.addAttribute("currency", Constants.CURRENCY);
         return "transactions";
     }
 
 
 
-    @GetMapping("/create_transaction")
+    @RequestMapping("/create_transaction")
     public String createTransaction(@RequestParam(required=false) String senderCustomerId,
                                     @RequestParam(required=false) String senderAccountId,
                                     @RequestParam(required=false) String receiverCustomerId,
@@ -224,7 +215,7 @@ public class AccountingController {
         Optional<Customer> receiverCustomer = Optional.empty();
         Optional<Account> receiverAccount = Optional.empty();
 
-        if (!StringUtils.isEmpty(senderCustomerId) && !"cashbox".equals(senderCustomerId)) {
+        if (!StringUtils.isEmpty(senderCustomerId) && !Constants.CASHBOX_VALUE.equals(senderCustomerId)) {
             try {
                 Long.parseLong(senderCustomerId);
             } catch (NumberFormatException e) {
@@ -252,7 +243,7 @@ public class AccountingController {
             }
         }
 
-        if (!StringUtils.isEmpty(receiverCustomerId) && !"cashbox".equals(receiverCustomerId)) {
+        if (!StringUtils.isEmpty(receiverCustomerId) && !Constants.CASHBOX_VALUE.equals(receiverCustomerId)) {
             try {
                 Long.parseLong(receiverCustomerId);
             } catch (NumberFormatException e) {
@@ -282,10 +273,10 @@ public class AccountingController {
 
         model.addAttribute("amount", amount);
 
-        if ("Create transaction".equals(action)) {
+        if (Constants.NEW_TRANSACTION_ACTION.equals(action)) {
             TransactionInputDataValidator.validateNewTransactionParams(senderCustomerId, senderAccountId, receiverCustomerId, receiverAccountId, amount);
-            Transaction newTransaction = new Transaction(senderCustomer.isPresent() ? senderAccount.get() : null,
-                    receiverCustomer.isPresent() ? receiverAccount.get() : null,
+            Transaction newTransaction = new Transaction(senderAccount.isPresent() ? senderAccount.get() : null,
+                    receiverAccount.isPresent() ? receiverAccount.get() : null,
                     Long.parseLong(amount), LocalDateTime.now());
             String response = transactionProcessor.provideTransaction(newTransaction);
             model.addAttribute("response", response);
@@ -296,7 +287,7 @@ public class AccountingController {
                 .collect(Collectors.toList());
         model.addAttribute("customers", customers);
 
-        model.addAttribute("currency", CURRENCY);
+        model.addAttribute("currency", Constants.CURRENCY);
         return "create_transaction";
     }
 

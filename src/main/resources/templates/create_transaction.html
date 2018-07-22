@@ -9,14 +9,14 @@
     <a href="/">Return to main page</a>
     <h1>Create new transaction</h1>
     <h2>Sender</h2>
-    <form name="Select sender" action="/create_transaction">
+    <form name="Select sender" action="/create_transaction" method="POST">
         Customer: <select name="senderCustomerId">
             <option value="cashbox">CASHBOX</option>
             <tr data-th-each="customer : ${customers}">
                 <option data-th-value="${customer.id}" data-th-selected="(${senderCustomerId} == ${customer.id})">[[${customer.name}]]</option>
             </tr>
         </select>
-        <input type="submit" name="action" value="Update Accounts" />
+        <input type="submit" name="action" value="Update Accounts" /><- after selecting customer press this button for accounts refresh
         <br>
         Account: <select name="senderAccountId">
             <tr data-th-each="account : ${senderAccounts}">
@@ -32,7 +32,7 @@
                 <option data-th-value="${customer.id}" data-th-selected="(${receiverCustomerId} == ${customer.id})">[[${customer.name}]]</option>
             </tr>
         </select>
-        <input type="submit" name="action" value="Update Accounts" />
+        <input type="submit" name="action" value="Update Accounts" /><- after selecting customer press this button for accounts refresh
         <br>
         Account: <select name="receiverAccountId">
             <tr data-th-each="account : ${receiverAccounts}">
